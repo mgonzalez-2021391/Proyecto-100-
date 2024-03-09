@@ -51,10 +51,8 @@ export const getCategories = async (req, res) => {
 
 export const getCategory = async (req, res) => {
     try {
-        let { id } = req.body
-        let category = await Category.find(
-            {_id: id}
-        )
+        let { name } = req.body
+        let category = await Category.find({name: name})
         return res.send({category})
      } catch (err) {
         console.error(err)

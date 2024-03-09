@@ -28,7 +28,8 @@ export const save = async(req, res)=>{
 
 export const addProduct = async (req, res) => {
     try {
-        let { userId, productId, quantity } = req.body
+        let { productId, quantity } = req.body
+        let userId = req.user
         let cart = await Cart.findOne({ user: userId })
         if (!cart) {
             let lastCart = await Cart.findOne().sort({ ordernumber: -1 })
@@ -71,8 +72,8 @@ export const getCarts = async (req, res) => {
 
 export const getCart = async (req, res) => {
     try {
-        let { id } = req.body
-        let cart = await Cart.find({_id: id})
+        let { order } = req.body
+        let cart = await Cart.find({ordernumber: order})
         return res.send({cart})
      } catch (err) {
         console.error(err)
@@ -109,8 +110,9 @@ export const getCart = async (req, res) => {
 
 export const removeProduct = async (req, res) => {
     try {
-        let { userId, productId } = req.body;
-        let cart = await Cart.findOne({ user: userId })
+        let { order, productId } = req.body
+        let userId = req.user
+        let cart = await Cart.findOne({ ordernumber: order, user: userId })
         if (!cart) {
             return res.status(404).send({ message: 'Cart not found' })
         }
